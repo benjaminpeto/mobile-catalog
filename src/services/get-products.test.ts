@@ -1,4 +1,3 @@
-// src/services/get-products.test.ts
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { ErrorEntity, ProductListEntity } from '@/types/api';

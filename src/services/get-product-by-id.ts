@@ -1,3 +1,5 @@
+'use server';
+
 import { ErrorEntity, ProductEntity } from '@/types/api';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
