@@ -14,9 +14,7 @@ export const PageContainer = styled.div`
 
 export const Title = styled.h1`
   font-size: 2.5rem;
-  margin: 0.5rem 0;
   text-align: center;
-  color: red;
 `;
 
 export const Description = styled.p`

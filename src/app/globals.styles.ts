@@ -4,8 +4,13 @@ import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
 :root {
-  --background: #f1f1f1;
-  --foreground: #171717;
+  --background: #ffffff;
+  --foreground: #000000;
+  --negro-titanium: #62605F;
+  --violeta-titanium: #4D4E5F;
+  --gris-titanium: #ACA49B;
+  --amarillo-titanium: #F0E1B9;
+  --font-helvetica: Helvetica, Arial, sans-serif;
 }
 
 html,
@@ -17,9 +22,10 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-helvetica);
+  font-weight: 300;
 }
 
 * {

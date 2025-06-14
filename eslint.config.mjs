@@ -21,6 +21,7 @@ const eslintConfig = [
       'simple-import-sort/exports': 'error',
       'simple-import-sort/imports': 'error',
       'import/named': 'off',
+      'import/no-named-as-default': 'off',
       'import/no-unresolved': 'off',
       'check-file/filename-naming-convention': [
         'error',
