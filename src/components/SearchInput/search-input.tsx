@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
-
-import { ParagraphText } from '@/components/Header';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useTransition } from 'react';
 
 import {
   ClearButton,
@@ -12,29 +11,52 @@ import {
   SearchInputField,
 } from './search-input.styles';
 
-export function SearchInput() {
-  const [inputValue, setInputValue] = useState('');
+interface SearchInputProps {
+  initialValue?: string;
+}
 
-  const handleClearInput = () => {
-    setInputValue('');
+export function SearchInput({ initialValue = '' }: SearchInputProps) {
+  const [value, setValue] = useState(initialValue);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.value;
+    setValue(next);
+
+    // search as you type - onChange
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (next) params.set('search', next);
+      else params.delete('search');
+      // replaces the URL without reloading, triggering SSR re-rendering
+      router.replace(`/?${params.toString()}`, { scroll: false });
+    });
   };
 
   return (
     <SearchInputContainer>
       <InputWrapper>
         <SearchInputField
+          name="search"
           type="text"
-          placeholder="Search for a smartphone..."
-          value={inputValue}
-          onChange={e => setInputValue(e.target.value)}
+          placeholder="Search for a smartphone"
+          value={value}
+          onChange={handleChange}
         />
-        {inputValue && (
-          <ClearButton onClick={handleClearInput}>
+        {value && (
+          <ClearButton
+            type="button"
+            onClick={() => {
+              setValue('');
+              handleChange({ target: { value: '' } } as any);
+            }}
+          >
             <Image src="/x.svg" alt="Clear search" width={8} height={8} />
           </ClearButton>
         )}
       </InputWrapper>
-      <ParagraphText fontSize="12px">20 results</ParagraphText>
     </SearchInputContainer>
   );
 }
