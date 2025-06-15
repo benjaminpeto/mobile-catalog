@@ -28,7 +28,7 @@ export function MobileCard({
   onClick,
 }: MobileCardProps) {
   return (
-    <Link href={`/product/${productId}`}>
+    <Link href={`/${productId}`}>
       <MobileCardContainer key={`${idx}-${productId}`}>
         <MobileCardImage
           src={imageUrl}

@@ -27,7 +27,7 @@ describe('MobileCard', () => {
     brand: 'MegaCorp',
     price: 499,
     imageUrl: 'https://example.com/superphone.jpg',
-    onClick: vi.fn(), // TODO --- currently unused by the component
+    onClick: vi.fn(),
   };
 
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('MobileCard', () => {
   it('wraps everything in a link to the product page', () => {
     render(<MobileCard {...props} />);
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', `/product/${props.productId}`);
+    expect(link).toHaveAttribute('href', `/${props.productId}`);
 
     const article = link.querySelector('article');
     expect(article).toBeInTheDocument();
