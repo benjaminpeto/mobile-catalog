@@ -1,20 +1,27 @@
+import { MobileCard } from '@/components/MobileCard';
+import type { ProductListEntity } from '@/types/api';
+
 import { MobileListGrid } from './mobile-list-container.styles';
 
-export function MobileListContainer() {
+interface MobileListContainerProps {
+  products: ProductListEntity[];
+}
+
+export function MobileListContainer({ products }: MobileListContainerProps) {
   return (
     <MobileListGrid>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
-      <h1>Mobile List Container</h1>
+      {products.map((product, idx) => (
+        <MobileCard
+          key={`${idx}-${product.id}`}
+          idx={idx}
+          productId={product.id}
+          name={product.name}
+          brand={product.brand}
+          price={product.basePrice}
+          imageUrl={product.imageUrl}
+          onClick={() => console.log(`Clicked on product ${product.id}`)}
+        />
+      ))}
     </MobileListGrid>
   );
 }
