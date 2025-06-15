@@ -1,3 +1,4 @@
+export * from './AlertContainer';
 export * from './Basket';
 export * from './Header';
 export * from './MobileCard';
