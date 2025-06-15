@@ -1,5 +1,10 @@
-import { SearchInput } from '@/components';
+import { MobileListContainer, SearchInput } from '@/components';
 
 export default function Home() {
-  return <SearchInput />;
+  return (
+    <>
+      <SearchInput />
+      <MobileListContainer />
+    </>
+  );
 }
