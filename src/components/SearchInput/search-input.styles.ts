@@ -8,6 +8,14 @@ export const SearchInputContainer = styled.div`
   padding: 12px 100px;
   margin-top: 80px;
   gap: 12px;
+
+  @media (max-width: 768px) {
+    padding: 12px 40px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 16px;
+  }
 `;
 
 export const SearchInputField = styled.input`
@@ -21,4 +29,26 @@ export const SearchInputField = styled.input`
     outline: none;
     border-bottom: 1px solid var(--foreground);
   }
+`;
+
+export const ClearButton = styled.button`
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;
