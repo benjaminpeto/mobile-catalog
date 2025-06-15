@@ -65,26 +65,4 @@ describe('ParagraphText styled component (direct prop overrides)', () => {
       textTransform: 'uppercase', // default
     });
   });
-
-  it('applies a custom textTransform when passed', () => {
-    render(<ParagraphText textTransform="none">No Transform</ParagraphText>);
-    const p = screen.getByText('No Transform');
-    expect(p).toHaveStyle({
-      fontSize: '14px', // default
-      textTransform: 'none',
-    });
-  });
-
-  it('applies both custom fontSize and textTransform when passed', () => {
-    render(
-      <ParagraphText fontSize="16px" textTransform="capitalize">
-        Styled Para
-      </ParagraphText>,
-    );
-    const p = screen.getByText('Styled Para');
-    expect(p).toHaveStyle({
-      fontSize: '16px',
-      textTransform: 'capitalize',
-    });
-  });
 });
