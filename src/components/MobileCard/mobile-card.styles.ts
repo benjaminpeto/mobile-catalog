@@ -22,7 +22,7 @@ export const MobileCardContainer = styled.article`
     height: 100%;
     background: var(--foreground);
     transform: translateY(100%);
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.5s ease-in-out;
     z-index: 0;
   }
 

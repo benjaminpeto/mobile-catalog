@@ -15,7 +15,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <>
-      <SearchInput initialValue={search} />
+      <SearchInput initialValue={search} numberOfItems={products.length} />
 
       <Suspense
         fallback={

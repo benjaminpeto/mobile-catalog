@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
+import { ParagraphText } from '../Header';
 import {
   ClearButton,
   InputWrapper,
@@ -13,9 +14,13 @@ import {
 
 interface SearchInputProps {
   initialValue?: string;
+  numberOfItems: number;
 }
 
-export function SearchInput({ initialValue = '' }: SearchInputProps) {
+export function SearchInput({
+  initialValue = '',
+  numberOfItems,
+}: SearchInputProps) {
   const [value, setValue] = useState(initialValue);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,6 +62,7 @@ export function SearchInput({ initialValue = '' }: SearchInputProps) {
           </ClearButton>
         )}
       </InputWrapper>
+      <ParagraphText>{numberOfItems} Results</ParagraphText>
     </SearchInputContainer>
   );
 }

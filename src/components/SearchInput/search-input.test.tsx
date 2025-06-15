@@ -26,20 +26,29 @@ describe('SearchInput', () => {
     mockSearchParams.delete('search');
   });
 
-  it('renders the text input with correct placeholder and no clear button initially', () => {
-    render(<SearchInput />);
-    const input = screen.getByPlaceholderText('Search for a smartphone');
+  it('renders the input, no clear button initially, and shows the results count', () => {
+    const count = 7;
+    render(<SearchInput numberOfItems={count} />);
 
+    const input = screen.getByPlaceholderText('Search for a smartphone');
     expect(input).toBeInTheDocument();
     expect(input).toHaveValue('');
     expect(screen.queryByAltText('Clear search')).not.toBeInTheDocument();
+
+    const results = screen.getByText(`${count} Results`);
+    expect(results).toBeInTheDocument();
+    expect(results.tagName.toLowerCase()).toBe('p');
+    expect(results).toHaveStyle({
+      fontSize: '14px',
+      textTransform: 'uppercase',
+    });
   });
 
-  it('calls router.replace on each keystroke with the updated search param', () => {
-    render(<SearchInput />);
+  it('calls router.replace on each keystroke with updated search param', () => {
+    render(<SearchInput numberOfItems={0} />);
     const input = screen.getByPlaceholderText('Search for a smartphone');
-    fireEvent.change(input, { target: { value: 'apple' } });
 
+    fireEvent.change(input, { target: { value: 'apple' } });
     expect(input).toHaveValue('apple');
     expect(mockReplace).toHaveBeenCalledTimes(1);
     expect(mockReplace).toHaveBeenCalledWith('/?search=apple', {
@@ -47,8 +56,8 @@ describe('SearchInput', () => {
     });
   });
 
-  it('shows a clear button when there is text, and clears input & URL on click', () => {
-    render(<SearchInput />);
+  it('shows clear button when typing and clears input & URL on click', () => {
+    render(<SearchInput numberOfItems={0} />);
     const input = screen.getByPlaceholderText('Search for a smartphone');
 
     fireEvent.change(input, { target: { value: 'xyz' } });
@@ -60,12 +69,13 @@ describe('SearchInput', () => {
     expect(mockReplace).toHaveBeenCalledWith('/?', { scroll: false });
   });
 
-  it('accepts an initialValue prop to pre-populate the input and show clear', () => {
-    render(<SearchInput initialValue="hello" />);
+  it('pre-populates from initialValue and shows clear button but does not auto-call replace', () => {
+    render(<SearchInput initialValue="hello" numberOfItems={2} />);
     const input = screen.getByPlaceholderText('Search for a smartphone');
 
     expect(input).toHaveValue('hello');
     expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByText('2 Results')).toBeInTheDocument();
     expect(mockReplace).not.toHaveBeenCalled();
   });
 });
