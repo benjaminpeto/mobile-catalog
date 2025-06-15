@@ -34,8 +34,7 @@ describe('getProducts', () => {
     },
   ];
 
-  it('fetches product list without search and returns data', async () => {
-    // import after stubbing env
+  it('fetches first 20 products without search and returns data', async () => {
     const { getProducts } = await import('./get-products');
     vi.stubGlobal(
       'fetch',
@@ -49,7 +48,7 @@ describe('getProducts', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(
-      `${MOCK_URL}/products`,
+      `${MOCK_URL}/products?limit=20&offset=0`,
       expect.objectContaining({
         method: 'GET',
         headers: {
@@ -61,9 +60,11 @@ describe('getProducts', () => {
     expect(result).toEqual(sampleList);
   });
 
-  it('appends `?search=` when a search term is provided', async () => {
+  it('includes search, default limit and offset when search term provided', async () => {
     const term = 'iphone';
-    const expectedUrl = `${MOCK_URL}/products?search=${encodeURIComponent(term)}`;
+    const expectedUrl = `${MOCK_URL}/products?search=${encodeURIComponent(
+      term,
+    )}&limit=20&offset=0`;
 
     const { getProducts } = await import('./get-products');
     vi.stubGlobal(
@@ -78,13 +79,37 @@ describe('getProducts', () => {
 
     expect(fetch).toHaveBeenCalledWith(
       expectedUrl,
-      expect.objectContaining({
-        method: 'GET',
-      }),
+      expect.objectContaining({ method: 'GET' }),
     );
   });
 
-  it('throws with errBody.message when response.ok is false and message is set', async () => {
+  it('accepts custom limit and offset parameters', async () => {
+    const term = 'galaxy';
+    const limit = 5;
+    const offset = 10;
+    const expectedUrl = `${MOCK_URL}/products?search=${encodeURIComponent(
+      term,
+    )}&limit=${limit}&offset=${offset}`;
+
+    const { getProducts } = await import('./get-products');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(sampleList),
+      }),
+    );
+
+    const result = await getProducts(term, limit, offset);
+
+    expect(fetch).toHaveBeenCalledWith(
+      expectedUrl,
+      expect.objectContaining({ method: 'GET' }),
+    );
+    expect(result).toEqual(sampleList);
+  });
+
+  it('throws API error when response.ok is false and message is set', async () => {
     const errorBody: ErrorEntity = {
       error: 'Err',
       message: 'Bad query',
@@ -102,7 +127,7 @@ describe('getProducts', () => {
     await expect(getProducts()).rejects.toThrow('Bad query');
   });
 
-  it('throws with errBody.error when message is empty but error is set', async () => {
+  it('throws API error when message is empty but error is set', async () => {
     const errorBody: ErrorEntity = {
       error: 'ServerError',
       message: '',
@@ -120,11 +145,8 @@ describe('getProducts', () => {
     await expect(getProducts()).rejects.toThrow('ServerError');
   });
 
-  it('throws fallback message when both error and message are empty', async () => {
-    const errorBody: ErrorEntity = {
-      error: '',
-      message: '',
-    };
+  it('throws fallback error when both error and message are empty', async () => {
+    const errorBody: ErrorEntity = { error: '', message: '' };
 
     const { getProducts } = await import('./get-products');
     vi.stubGlobal(
