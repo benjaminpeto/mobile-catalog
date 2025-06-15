@@ -1,10 +1,13 @@
 import { MobileListContainer, SearchInput } from '@/components';
+import { getProducts } from '@/services';
 
-export default function Home() {
+export default async function Home() {
+  const products = await getProducts();
+
   return (
     <>
       <SearchInput />
-      <MobileListContainer />
+      <MobileListContainer products={products} />
     </>
   );
 }

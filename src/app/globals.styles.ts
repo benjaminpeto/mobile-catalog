@@ -10,6 +10,7 @@ export const GlobalStyles = createGlobalStyle`
   --violeta-titanium: #4D4E5F;
   --gris-titanium: #ACA49B;
   --amarillo-titanium: #F0E1B9;
+  --foreground-muted: #79736D;
   --font-helvetica: Helvetica, Arial, sans-serif;
 }
 
