@@ -23,8 +23,29 @@ export const ProductContainer = styled.main`
   }
 `;
 
+export const ImageContainer = styled.div`
+  position: relative;
+  width: 510px;
+  height: 630px;
+  overflow: hidden;
+`;
+
 export const ProductImage = styled(Image)`
   object-fit: contain;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.5s ease-in-out;
+
+  &.visible {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  &.hidden {
+    opacity: 0.2;
+    z-index: 1;
+  }
 
   @media (max-width: 1024px) {
     max-width: 400px;
@@ -48,6 +69,7 @@ export const ColorButton = styled.button`
   width: 20px;
   height: 20px;
   border: none;
+  cursor: pointer;
 `;
 
 export const ButtonWrapper = styled.div`

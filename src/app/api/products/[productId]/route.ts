@@ -8,10 +8,10 @@ export const revalidate = 60; // 60 seconds
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { productId: string } },
+  { params }: { params: Promise<{ productId: string }> },
 ): Promise<NextResponse<ProductEntity | ErrorEntity>> {
   try {
-    const { productId } = params;
+    const { productId } = await params;
     const product: ProductEntity = await getProductById(productId);
 
     return NextResponse.json(product, { status: 200 });

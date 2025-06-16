@@ -57,7 +57,9 @@ describe('GET /api/products/[productId]', () => {
     (getProductById as Mock).mockResolvedValue(sampleProduct);
 
     const req = new Request('http://localhost/api/products/1');
-    const context = { params: { productId: '1' } };
+    const context = {
+      params: Promise.resolve({ productId: '1' }),
+    };
 
     const res = await GET(req as any, context);
 
@@ -73,7 +75,9 @@ describe('GET /api/products/[productId]', () => {
     (getProductById as Mock).mockRejectedValue(error);
 
     const req = new Request('http://localhost/api/products/does-not-exist');
-    const context = { params: { productId: 'does-not-exist' } };
+    const context = {
+      params: Promise.resolve({ productId: 'does-not-exist' }),
+    };
 
     const res = await GET(req as any, context);
 

@@ -10,6 +10,7 @@ import {
   ButtonWrapper,
   ColorButton,
   ColorSwatchWrapper,
+  ImageContainer,
   ProductContainer,
   ProductImage,
   SelectorWrapper,
@@ -32,12 +33,20 @@ export default function MainProductContainer({ product }: ProductClientProps) {
 
   return (
     <ProductContainer>
-      <ProductImage
-        src={selectedColor.imageUrl}
-        alt={selectedColor.name}
-        width={510}
-        height={630}
-      />
+      <ImageContainer>
+        {colorOptions.map(color => (
+          <ProductImage
+            key={color.hexCode}
+            src={color.imageUrl}
+            alt={`${name} - ${color.name}`}
+            width={510}
+            height={630}
+            className={
+              selectedColor.hexCode === color.hexCode ? 'visible' : 'hidden'
+            }
+          />
+        ))}
+      </ImageContainer>
       <SelectorWrapper>
         <MainHeading>{name}</MainHeading>
         <ParagraphText
