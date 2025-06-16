@@ -1,6 +1,11 @@
 'use client';
 
-import { MainProductContainer, MobileCard, ProductSpecs } from '@/components';
+import {
+  Carousel,
+  MainProductContainer,
+  MobileCard,
+  ProductSpecs,
+} from '@/components';
 import type { ProductEntity } from '@/types/api';
 
 export interface ProductClientProps {
@@ -14,9 +19,8 @@ export default function ProductClient({ product }: ProductClientProps) {
 
       <ProductSpecs product={product} />
 
-      <h2>Similar Products</h2>
-      <div>
-        {product.similarProducts.map((similarProduct, idx) => (
+      <Carousel
+        items={product.similarProducts.map((similarProduct, idx) => (
           <MobileCard
             key={`${idx}-${similarProduct.id}`}
             idx={idx}
@@ -30,7 +34,7 @@ export default function ProductClient({ product }: ProductClientProps) {
             }
           />
         ))}
-      </div>
+      />
     </>
   );
 }
