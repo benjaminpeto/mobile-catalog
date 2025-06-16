@@ -6,7 +6,7 @@ import styled from 'styled-components';
 export const ProductContainer = styled.main`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   padding: 24px 0px;
   width: 100%;

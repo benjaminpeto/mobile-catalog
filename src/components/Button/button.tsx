@@ -7,7 +7,7 @@ interface ButtonProps {
   variant: 'primary' | 'secondary' | 'disabled' | 'link';
 }
 
-export default function Button({ text, onClick, icon, variant }: ButtonProps) {
+export function Button({ text, onClick, icon, variant }: ButtonProps) {
   return (
     <StyledButton
       onClick={onClick}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import Button from '@/components/Button';
+import { Button } from '@/components';
 import type { ColorOption, ProductEntity, StorageOption } from '@/types/api';
 
 import { MainHeading, ParagraphText } from '../Header';
@@ -22,7 +22,7 @@ interface ProductClientProps {
   product: ProductEntity;
 }
 
-export default function MainProductContainer({ product }: ProductClientProps) {
+export function MainProductContainer({ product }: ProductClientProps) {
   const { name, colorOptions, storageOptions } = product;
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     product.colorOptions[0],

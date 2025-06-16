@@ -1,10 +1,9 @@
 'use client';
 
-import { MainProductContainer } from '@/components';
-import { MobileCard } from '@/components/MobileCard';
+import { MainProductContainer, MobileCard, ProductSpecs } from '@/components';
 import type { ProductEntity } from '@/types/api';
 
-interface ProductClientProps {
+export interface ProductClientProps {
   product: ProductEntity;
 }
 
@@ -12,6 +11,8 @@ export default function ProductClient({ product }: ProductClientProps) {
   return (
     <>
       <MainProductContainer product={product} />
+
+      <ProductSpecs product={product} />
 
       <h2>Similar Products</h2>
       <div>

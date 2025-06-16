@@ -4,10 +4,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
-import Button from '@/components/Button';
+import { Button, MainProductContainer } from '@/components';
 import type { ProductEntity } from '@/types/api';
-
-import MainProductContainer from './main-product-container';
 
 vi.mock('next/image', () => ({
   __esModule: true,
