@@ -1,9 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { styled } from 'styled-components';
 
-export const BasketContainer = styled.div`
+export const BasketContainer = styled(Link)`
   display: flex;
   align-items: center;
   gap: 6px;

@@ -76,3 +76,14 @@ export const StyledChevronLeftSvg = styled.svg`
   padding-right: 4px;
   margin-bottom: -4px;
 `;
+
+// RemoveButton
+export const StyledRemoveButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 300;
+  font-family: var(--font-helvetica);
+  color: #df0000;
+`;
