@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { Navigation } from '@/components';
+import { CartProvider } from '@/context';
 import StyledComponentsRegistry from '@/lib/registry';
 
 import { GlobalStyles } from './globals.styles';
@@ -20,8 +21,10 @@ export default function RootLayout({
       <body>
         <GlobalStyles />
         <StyledComponentsRegistry>
-          <Navigation />
-          {children}
+          <CartProvider>
+            <Navigation />
+            {children}
+          </CartProvider>
         </StyledComponentsRegistry>
       </body>
     </html>

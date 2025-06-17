@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Button } from '@/components';
+import { useCart } from '@/context';
 import type { ColorOption, ProductEntity, StorageOption } from '@/types/api';
 
 import { MainHeading, ParagraphText } from '../Header';
@@ -24,12 +26,29 @@ interface ProductClientProps {
 
 export function MainProductContainer({ product }: ProductClientProps) {
   const { name, colorOptions, storageOptions } = product;
+  const { addToCart, cart } = useCart();
+  const router = useRouter();
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
     product.colorOptions[0],
   );
   const [selectedStorage, setSelectedStorage] = useState<StorageOption | null>(
     null,
   );
+
+  const handleAddToCart = () => {
+    if (selectedColor && selectedStorage) {
+      const item = {
+        name,
+        selectedStorage: selectedStorage.capacity,
+        selectedColor: selectedColor.name,
+        price: selectedStorage.price,
+        imageUrl: selectedColor.imageUrl,
+      };
+      addToCart(item);
+      localStorage.setItem('cart', JSON.stringify([...cart, item]));
+      router.push('/cart');
+    }
+  };
 
   return (
     <ProductContainer>
@@ -91,7 +110,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
         <Button
           text="Añadir"
           variant={!selectedColor || !selectedStorage ? 'disabled' : 'primary'}
-          onClick={() => console.log('Buy Now clicked')}
+          onClick={handleAddToCart}
         />
       </SelectorWrapper>
     </ProductContainer>
