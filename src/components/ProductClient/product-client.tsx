@@ -12,7 +12,7 @@ export interface ProductClientProps {
   product: ProductEntity;
 }
 
-export default function ProductClient({ product }: ProductClientProps) {
+export function ProductClient({ product }: ProductClientProps) {
   return (
     <>
       <MainProductContainer product={product} />

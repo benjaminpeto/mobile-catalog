@@ -12,7 +12,7 @@ vi.mock('next/image', () => ({
   // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
   default: (props: any) => <img data-testid="product-image" {...props} />,
 }));
-vi.mock('@/components/Button');
+vi.mock('@/components/Buttons');
 
 describe('MainProductContainer', () => {
   let product: ProductEntity;

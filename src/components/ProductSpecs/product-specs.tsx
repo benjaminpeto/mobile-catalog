@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ProductClientProps } from '@/app/[productId]/product-client';
+import { ProductClientProps } from '@/components';
 import { transformSpecifications } from '@/helpers';
 
 import { ParagraphText, SubHeading } from '../Header';

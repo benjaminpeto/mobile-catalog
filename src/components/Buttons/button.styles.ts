@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 export const StyledButton = styled.button<{
@@ -43,4 +44,35 @@ export const ButtonText = styled.span`
   font-size: 12px;
   font-weight: 300;
   text-transform: uppercase;
+`;
+
+// BackButton styles
+
+export const StyledBackButtonWrapper = styled.div`
+  display: flex;
+  padding: 0px 100px;
+  height: 44px;
+
+  @media (max-width: 768px) {
+    padding: 0px 40px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0px 16px;
+  }
+`;
+
+export const StyledBackButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-family: var(--font-helvetica);
+`;
+
+export const StyledChevronLeftSvg = styled.svg`
+  padding-right: 4px;
+  margin-bottom: -4px;
 `;

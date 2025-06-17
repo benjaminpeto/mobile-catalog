@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import { BackButton } from '@/components';
+
 import { ProductPageContainer } from './layout.styles';
 
 // TODO - add metadata for SEO dynamically based on product
@@ -13,5 +15,10 @@ export default function ProductPageLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <ProductPageContainer>{children}</ProductPageContainer>;
+  return (
+    <>
+      <BackButton />
+      <ProductPageContainer>{children}</ProductPageContainer>
+    </>
+  );
 }

@@ -1,6 +1,5 @@
+import { ProductClient } from '@/components';
 import { getProductById } from '@/services';
-
-import ProductClient from './product-client';
 
 export default async function ProductPage({
   params,
