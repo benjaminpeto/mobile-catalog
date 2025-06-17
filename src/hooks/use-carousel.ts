@@ -1,3 +1,18 @@
+/**
+ * Why all this ceremony?
+ *
+ * Figma demanded peek-through cards + drag/swipe only (no arrows).
+ *
+ * overflow: visible lets next card sneak in—but kills native scroll, so we hijack pointer events.
+ * pointer capture + a tiny DRAG_THRESHOLD means taps still click links, swipes slide the track.
+ * clamp translate via a ref (currentTrans) so we don’t flood React with state updates mid-drag.
+ * compute scrollProgress & segments to drive a little progress bar so users know where they are.
+ * Learned: sometimes CSS alone won’t cut it—combining refs, state, and pointer API yields buttery drags.
+ *
+ * If you aware a solution less cumbersome than this, or at least more readable, please contact me on benjaminpeto@gmail.com.
+ * I would love to know there is still hope when creating carousels from scratch 🤣
+ */
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -8,13 +23,13 @@ export function useCarousel(items: React.ReactNode[]) {
 
   // drag state
   const [isDragging, setIsDragging] = useState(false);
-  const startXRef = useRef(0);
+  const startXRef = useRef(0); // mouse starts here
   const currentTrans = useRef(0);
-  const [translate, setTranslate] = useState(0);
+  const [translate, setTranslate] = useState(0); // drives re-render
 
   // distinguish click vs drag
   const hasDraggedRef = useRef(false);
-  const DRAG_THRESHOLD = 5;
+  const DRAG_THRESHOLD = 5; // pixels of "i meant to drag" sensitivity
 
   // progress‐bar
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -36,14 +51,22 @@ export function useCarousel(items: React.ReactNode[]) {
     const prog = scrollable > 0 ? -curr / scrollable : 0;
     setScrollProgress(prog);
 
-    setVisibleSegments(Math.ceil(track.scrollWidth / wrap.clientWidth));
+    // setVisibleSegments(Math.ceil(track.scrollWidth / wrap.clientWidth));
+    const segments =
+      wrap.clientWidth > 0
+        ? Math.ceil(track.scrollWidth / wrap.clientWidth)
+        : 0;
+    setVisibleSegments(segments);
   }
 
   // start drag
   function onPointerDown(e: React.PointerEvent) {
     const w = wrapperRef.current;
     if (!w) return;
-    w.setPointerCapture(e.pointerId);
+    // w.setPointerCapture(e.pointerId);
+    if (typeof w.setPointerCapture === 'function') {
+      w.setPointerCapture(e.pointerId);
+    }
     setIsDragging(true);
     startXRef.current = e.clientX;
     hasDraggedRef.current = false;
@@ -71,14 +94,20 @@ export function useCarousel(items: React.ReactNode[]) {
   // end drag (or click)
   function onPointerUpCapture(e: React.PointerEvent) {
     const w = wrapperRef.current;
-    if (w) w.releasePointerCapture(e.pointerId);
+    // if (w) w.releasePointerCapture(e.pointerId);
+    if (w && typeof w.releasePointerCapture === 'function') {
+      w.releasePointerCapture(e.pointerId);
+    }
 
     // if it was a “click” (no real drag), manually navigate
     if (!hasDraggedRef.current) {
-      const el = document.elementFromPoint(
-        e.clientX,
-        e.clientY,
-      ) as HTMLElement | null;
+      const el =
+        typeof document.elementFromPoint === 'function'
+          ? (document.elementFromPoint(
+              e.clientX,
+              e.clientY,
+            ) as HTMLElement | null)
+          : null;
       const link = el?.closest('a') as HTMLAnchorElement | null;
       if (link) {
         const href = link.getAttribute('href');

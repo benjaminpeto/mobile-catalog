@@ -38,6 +38,7 @@ export function Carousel({ items }: CarouselProps) {
         onPointerDownCapture={onPointerDown}
         onPointerMoveCapture={onPointerMove}
         onPointerUpCapture={onPointerUpCapture}
+        data-testid="carousel-wrapper"
       >
         <CarouselTrack
           ref={trackRef}
@@ -46,6 +47,7 @@ export function Carousel({ items }: CarouselProps) {
             transform: `translateX(${translate}px)`,
             transition: isDragging ? 'none' : 'transform 0.3s ease',
           }}
+          data-testid="carousel-track"
         >
           {items}
         </CarouselTrack>
@@ -58,6 +60,7 @@ export function Carousel({ items }: CarouselProps) {
               key={i}
               $isActive={i === activeSegment}
               $isVisible={true}
+              data-testid="progress-segment"
             />
           ))}
         </ProgressBar>
