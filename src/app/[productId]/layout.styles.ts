@@ -17,3 +17,11 @@ export const ProductPageContainer = styled.div`
     padding: 24px 16px;
   }
 `;
+
+export const BackButtonContainer = styled.div`
+  position: fixed;
+  top: 75.5px;
+  z-index: 1001;
+  background-color: white;
+  width: 100%;
+`;

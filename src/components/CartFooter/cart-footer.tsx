@@ -1,3 +1,7 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 import { Button } from '../Buttons';
 import { ParagraphText } from '../Header';
 import {
@@ -7,28 +11,25 @@ import {
 } from './cart-footer.styles';
 
 export function CartFooter() {
+  const router = useRouter();
+
   return (
     <StyledCartFooterWrapper>
-      {/*
-        Desktop only secondary button
-      */}
       <Button
         variant="secondary"
         text="Continue shopping"
         className="desktop-only"
+        onClick={() => router.push('/')}
       />
 
-      {/*
-        Desktop only payment‐info
-      */}
       <StyledPaymentInfo>
-        <ParagraphText className="total-price">Total –price– EUR</ParagraphText>
+        <ParagraphText className="total-price">
+          <span>total </span>
+          <span>[price] eur</span>
+        </ParagraphText>
         <Button variant="primary" text="Pay" className="desktop-only" />
       </StyledPaymentInfo>
 
-      {/*
-        Mobile only row of buttons
-      */}
       <StyledMobileActions>
         <Button variant="secondary" text="Continue shopping" />
         <Button variant="primary" text="Pay" />
