@@ -6,14 +6,18 @@ export function useCartStorage() {
   const { cart, setCart } = useCart();
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
   }, [cart]);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      setCart(parsedCart);
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        setCart(parsedCart);
+      }
     }
   }, [setCart]);
 
@@ -22,28 +26,32 @@ export function useCartStorage() {
     selectedStorage: string,
     selectedColor: string,
   ) => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      const updatedCart = parsedCart.filter(
-        (item: {
-          id: string;
-          selectedStorage: string;
-          selectedColor: string;
-        }) =>
-          item.id !== id ||
-          item.selectedStorage !== selectedStorage ||
-          item.selectedColor !== selectedColor,
-      );
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        const updatedCart = parsedCart.filter(
+          (item: {
+            id: string;
+            selectedStorage: string;
+            selectedColor: string;
+          }) =>
+            item.id !== id ||
+            item.selectedStorage !== selectedStorage ||
+            item.selectedColor !== selectedColor,
+        );
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+      }
     }
   };
 
   const getCartCount = () => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      return parsedCart.length;
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        return parsedCart.length;
+      }
     }
     return 0;
   };

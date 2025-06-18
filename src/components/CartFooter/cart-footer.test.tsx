@@ -12,6 +12,16 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+const getCartCountMock = vi.fn();
+vi.mock('@/hooks', () => ({
+  useCartStorage: () => ({ getCartCount: getCartCountMock }),
+}));
+
+let cartVal: Array<{ id: string; name: string; price: number }> = [];
+vi.mock('@/context/cart-context', () => ({
+  useCart: () => ({ cart: cartVal }),
+}));
+
 vi.mock('../Buttons', () => ({
   __esModule: true,
   Button: ({ variant, text, className, onClick }: any) => (
@@ -42,54 +52,72 @@ vi.mock('./cart-footer.styles', () => ({
 describe('CartFooter', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockPush.mockClear();
+    cartVal = [];
   });
 
-  it('renders desktop and mobile buttons, plus payment info', () => {
+  it('renders only "Continue shopping" (desktop + mobile) when cart is empty', () => {
+    getCartCountMock.mockReturnValueOnce(0);
+    cartVal = [];
+
     render(<CartFooter />);
 
-    // -- Desktop "Continue shopping" --
+    const continues = screen.getAllByRole('button', {
+      name: 'Continue shopping',
+    });
+    expect(continues).toHaveLength(2);
+
+    expect(screen.queryByRole('button', { name: 'Pay' })).toBeNull();
+
+    expect(screen.queryByTestId('paragraph-text')).toBeNull();
+  });
+
+  it('renders totals, shows Pay buttons, navigates and alerts correctly when cart has items', () => {
+    // Prepare two items
+    cartVal = [
+      { id: 'a', name: 'A', price: 10 },
+      { id: 'b', name: 'B', price: 20 },
+    ];
+    getCartCountMock.mockReturnValueOnce(cartVal.length);
+
+    render(<CartFooter />);
+
+    // --- Desktop "Continue shopping" navigates home ---
     const desktopContinue = screen
       .getAllByRole('button', { name: 'Continue shopping' })
       .find(btn => btn.classList.contains('desktop-only'));
-    expect(desktopContinue).toBeInTheDocument();
-    expect(desktopContinue).toHaveAttribute('data-variant', 'secondary');
-
-    // -- Desktop "Pay" --
-    const desktopPay = screen
-      .getAllByRole('button', { name: 'Pay' })
-      .find(btn => btn.classList.contains('desktop-only'));
-    expect(desktopPay).toBeInTheDocument();
-    expect(desktopPay).toHaveAttribute('data-variant', 'primary');
-
-    // -- Total price info --
-    const paymentInfo = screen.getByTestId('paragraph-text');
-    expect(paymentInfo).toHaveClass('total-price');
-    // children are two spans: "total " and "[price] eur"
-    expect(paymentInfo).toHaveTextContent('total [price] eur');
-
-    // -- Mobile actions wrapper --
-    const mobile = screen.getByTestId('mobile-actions');
-    const mobileButtons = within(mobile).getAllByRole('button');
-    expect(mobileButtons).toHaveLength(2);
-    expect(mobileButtons[0]).toHaveTextContent('Continue shopping');
-    expect(mobileButtons[1]).toHaveTextContent('Pay');
-  });
-
-  it('navigates home when desktop "Continue shopping" is clicked', () => {
-    render(<CartFooter />);
-    const desktopContinue = screen
-      .getAllByRole('button', { name: 'Continue shopping' })
-      .find(btn => btn.classList.contains('desktop-only'));
+    expect(desktopContinue).toBeTruthy();
     fireEvent.click(desktopContinue!);
     expect(mockPush).toHaveBeenCalledWith('/', { scroll: false });
-  });
 
-  it('does not navigate when "Pay" is clicked', () => {
-    render(<CartFooter />);
+    // --- Total price is sum of item prices ---
+    const sum = cartVal.reduce((s, i) => s + i.price, 0);
+    const paymentInfo = screen.getByTestId('paragraph-text');
+    expect(paymentInfo).toHaveClass('total-price');
+    expect(paymentInfo).toHaveTextContent(`total ${sum} eur`);
+
+    // --- Desktop "Pay" shows and alerts ---
     const desktopPay = screen
       .getAllByRole('button', { name: 'Pay' })
       .find(btn => btn.classList.contains('desktop-only'));
+    expect(desktopPay).toBeTruthy();
+
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
     fireEvent.click(desktopPay!);
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(alertSpy).toHaveBeenCalledWith(
+      'Te encantaría trabajar conmigo... ¡Me encantaría!',
+    );
+
+    // --- Mobile actions ---
+    const mobile = screen.getByTestId('mobile-actions');
+    const mobileButtons = within(mobile).getAllByRole('button');
+
+    expect(mobileButtons[0]).toHaveTextContent('Continue shopping');
+    fireEvent.click(mobileButtons[0]);
+    expect(mockPush).toHaveBeenCalledTimes(1);
+
+    expect(mobileButtons[1]).toHaveTextContent('Pay');
+    fireEvent.click(mobileButtons[1]);
+    expect(alertSpy).toHaveBeenCalledTimes(2);
   });
 });
