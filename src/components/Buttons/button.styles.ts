@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+
 import styled from 'styled-components';
 
 export const StyledButton = styled.button<{
@@ -47,7 +47,6 @@ export const ButtonText = styled.span`
 `;
 
 // BackButton styles
-
 export const StyledBackButtonWrapper = styled.div`
   display: flex;
   padding: 0px 100px;
@@ -86,4 +85,5 @@ export const StyledRemoveButton = styled.button`
   font-weight: 300;
   font-family: var(--font-helvetica);
   color: #df0000;
+  text-align: start;
 `;

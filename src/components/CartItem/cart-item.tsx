@@ -1,13 +1,18 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { CartItem as CartItemInferface, useCart } from '@/context/cart-context';
 import { useCartStorage } from '@/hooks';
 
 import { RemoveButton } from '../Buttons/remove-button';
-import { SubHeading } from '../Header';
+import { ParagraphText, SubHeading } from '../Header';
+import {
+  StyledCartItem,
+  StyledCartItemImage,
+  StyledCartItemInfoWrapper,
+  StyledCartItemWrapper,
+} from './cart-item.styles';
 
 export function CartItem() {
   const { cart, setCart } = useCart();
@@ -26,17 +31,30 @@ export function CartItem() {
   };
 
   return (
-    <article>
+    <StyledCartItem>
       {hydratedCart.map(item => (
-        <div key={item.name}>
-          <Image src={item.imageUrl} width={262} height={324} alt={item.name} />
-          <div>
-            <SubHeading>{item.name}</SubHeading>
-            <SubHeading>{item.price}</SubHeading>
+        <StyledCartItemWrapper key={item.name}>
+          <StyledCartItemImage
+            src={item.imageUrl}
+            width={262}
+            height={324}
+            alt={item.name}
+          />
+          <StyledCartItemInfoWrapper>
+            <div>
+              <SubHeading>{item.name}</SubHeading>
+              <ParagraphText fontSize="12px">
+                {item.selectedStorage} | {item.selectedColor}
+              </ParagraphText>
+              <ParagraphText fontSize="12px" style={{ paddingTop: '20px' }}>
+                {item.price} EUR
+              </ParagraphText>
+            </div>
+
             <RemoveButton onClick={() => handleRemoveItem(item.name)} />
-          </div>
-        </div>
+          </StyledCartItemInfoWrapper>
+        </StyledCartItemWrapper>
       ))}
-    </article>
+    </StyledCartItem>
   );
 }

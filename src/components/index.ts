@@ -2,6 +2,7 @@ export * from './AlertContainer';
 export * from './Basket';
 export * from './Buttons';
 export * from './Carousel';
+export * from './CartFooter';
 export * from './CartItem';
 export * from './Header';
 export * from './MainProductContainer';
