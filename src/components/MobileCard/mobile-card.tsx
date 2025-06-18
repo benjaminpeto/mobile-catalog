@@ -34,6 +34,7 @@ export function MobileCard({
           width={312}
           height={257}
           style={{ objectFit: 'contain' }}
+          priority={true} // disables lazy loading as the image is above the fold and LCP, will improve performance
         />
         <MobileTextContainer>
           <ParagraphText $fontSize="10px" color="var(--foreground-muted)">

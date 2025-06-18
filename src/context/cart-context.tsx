@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 export interface CartItem {
+  id: string;
   name: string;
   selectedStorage: string;
   selectedColor: string;

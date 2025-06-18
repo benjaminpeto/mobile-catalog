@@ -25,7 +25,7 @@ interface ProductClientProps {
 }
 
 export function MainProductContainer({ product }: ProductClientProps) {
-  const { name, colorOptions, storageOptions } = product;
+  const { id, name, colorOptions, storageOptions } = product;
   const { addToCart, cart } = useCart();
   const router = useRouter();
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
@@ -38,6 +38,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
   const handleAddToCart = () => {
     if (selectedColor && selectedStorage) {
       const item = {
+        id,
         name,
         selectedStorage: selectedStorage.capacity,
         selectedColor: selectedColor.name,

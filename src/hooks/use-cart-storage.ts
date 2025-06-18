@@ -17,16 +17,36 @@ export function useCartStorage() {
     }
   }, [setCart]);
 
-  const removeItemFromStorage = (itemName: string) => {
+  const removeItemFromStorage = (
+    id: string,
+    selectedStorage: string,
+    selectedColor: string,
+  ) => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
       const parsedCart = JSON.parse(savedCart);
       const updatedCart = parsedCart.filter(
-        (item: { name: string }) => item.name !== itemName,
+        (item: {
+          id: string;
+          selectedStorage: string;
+          selectedColor: string;
+        }) =>
+          item.id !== id ||
+          item.selectedStorage !== selectedStorage ||
+          item.selectedColor !== selectedColor,
       );
       localStorage.setItem('cart', JSON.stringify(updatedCart));
     }
   };
 
-  return { removeItemFromStorage };
+  const getCartCount = () => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      const parsedCart = JSON.parse(savedCart);
+      return parsedCart.length;
+    }
+    return 0;
+  };
+
+  return { removeItemFromStorage, getCartCount };
 }

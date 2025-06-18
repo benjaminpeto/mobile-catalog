@@ -45,8 +45,4 @@ export const CartPageContainer = styled.div`
     overflow-y: auto;
     margin-bottom: 100px;
   }
-
-  & .cart-heading {
-    margin-bottom: 100px;
-  }
 `;

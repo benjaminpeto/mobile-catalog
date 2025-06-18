@@ -4,6 +4,8 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { CartProvider } from '@/context/cart-context';
+
 import { Navigation } from './navigation';
 
 vi.mock('next/image', () => ({
@@ -16,7 +18,11 @@ vi.mock('next/image', () => ({
 
 describe('Navigation', () => {
   it('renders a nav container with correct layout styles', () => {
-    render(<Navigation />);
+    render(
+      <CartProvider>
+        <Navigation />
+      </CartProvider>,
+    );
     const nav = screen.getByRole('navigation');
     expect(nav).toBeInTheDocument();
     expect(nav).toHaveStyle({
@@ -29,7 +35,11 @@ describe('Navigation', () => {
   });
 
   it('renders the logo with correct attributes', () => {
-    render(<Navigation />);
+    render(
+      <CartProvider>
+        <Navigation />
+      </CartProvider>,
+    );
     const logo = screen.getByAltText('MBST Logo') as HTMLImageElement;
     expect(logo).toBeInTheDocument();
     expect(logo.src).toContain('/mbst.svg');
@@ -39,7 +49,11 @@ describe('Navigation', () => {
   });
 
   it('includes the Basket component', () => {
-    render(<Navigation />);
+    render(
+      <CartProvider>
+        <Navigation />
+      </CartProvider>,
+    );
 
     expect(screen.getByText('0')).toBeInTheDocument();
   });

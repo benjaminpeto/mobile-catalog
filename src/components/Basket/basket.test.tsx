@@ -4,6 +4,8 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { CartProvider } from '@/context/cart-context';
+
 import { Basket } from './basket';
 
 // Mock next/image to render a plain <img> so we can assert on its props
@@ -17,7 +19,11 @@ vi.mock('next/image', () => ({
 
 describe('Basket', () => {
   it('renders the basket SVG with correct attributes', () => {
-    render(<Basket />);
+    render(
+      <CartProvider>
+        <Basket />
+      </CartProvider>,
+    );
     const img = screen.getByAltText('basket svg') as HTMLImageElement;
     expect(img).toBeInTheDocument();
 
@@ -27,12 +33,20 @@ describe('Basket', () => {
   });
 
   it('displays the initial count of 0', () => {
-    render(<Basket />);
+    render(
+      <CartProvider>
+        <Basket />
+      </CartProvider>,
+    );
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
   it('wraps everything in a flex container that is clickable', () => {
-    render(<Basket />);
+    render(
+      <CartProvider>
+        <Basket />
+      </CartProvider>,
+    );
     const container = screen.getByText('0').parentElement!;
     expect(container).toHaveStyle({
       display: 'flex',

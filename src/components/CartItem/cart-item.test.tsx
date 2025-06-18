@@ -8,6 +8,7 @@ import { CartItem } from './cart-item';
 
 const mockCart = [
   {
+    id: '1',
     name: 'Item One',
     imageUrl: 'http://example.com/img1.png',
     selectedStorage: '64GB',
@@ -15,6 +16,7 @@ const mockCart = [
     price: '299',
   },
   {
+    id: '2',
     name: 'Item Two',
     imageUrl: 'http://example.com/img2.png',
     selectedStorage: '128GB',
@@ -76,6 +78,10 @@ describe('CartItem', () => {
     fireEvent.click(removeButtons[0]);
 
     expect(setCart).toHaveBeenCalledWith([mockCart[1]]);
-    expect(removeItemFromStorage).toHaveBeenCalledWith(mockCart[0].name);
+    expect(removeItemFromStorage).toHaveBeenCalledWith(
+      mockCart[0].id,
+      mockCart[0].selectedStorage,
+      mockCart[0].selectedColor,
+    );
   });
 });

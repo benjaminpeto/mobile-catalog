@@ -24,21 +24,34 @@ export function CartItem() {
     setHydratedCart(cart);
   }, [cart]);
 
-  const handleRemoveItem = (itemName: string) => {
-    const updatedCart = cart.filter(item => item.name !== itemName);
+  // as IDs are not unique, we need to handle the removal of items based on their ID, selectedStorage, and selectedColor
+  const handleRemoveItem = (
+    id: string,
+    selectedStorage: string,
+    selectedColor: string,
+  ) => {
+    const updatedCart = cart.filter(
+      item =>
+        item.id !== id ||
+        item.selectedStorage !== selectedStorage ||
+        item.selectedColor !== selectedColor,
+    );
     setCart(updatedCart);
-    removeItemFromStorage(itemName);
+    removeItemFromStorage(id, selectedStorage, selectedColor);
   };
 
   return (
     <StyledCartItem>
       {hydratedCart.map(item => (
-        <StyledCartItemWrapper key={item.name}>
+        <StyledCartItemWrapper
+          key={`${item.id}-${item.selectedStorage}-${item.selectedColor}`}
+        >
           <StyledCartItemImage
             src={item.imageUrl}
             width={262}
             height={324}
             alt={item.name}
+            priority={true} // disables lazy loading as the image is above the fold and LCP, will improve performance
           />
           <StyledCartItemInfoWrapper>
             <div>
@@ -51,7 +64,15 @@ export function CartItem() {
               </ParagraphText>
             </div>
 
-            <RemoveButton onClick={() => handleRemoveItem(item.name)} />
+            <RemoveButton
+              onClick={() =>
+                handleRemoveItem(
+                  item.id,
+                  item.selectedStorage,
+                  item.selectedColor,
+                )
+              }
+            />
           </StyledCartItemInfoWrapper>
         </StyledCartItemWrapper>
       ))}
