@@ -89,6 +89,7 @@ describe('CartFooter', () => {
     expect(desktopContinue).toBeTruthy();
     fireEvent.click(desktopContinue!);
     expect(mockPush).toHaveBeenCalledWith('/', { scroll: false });
+    mockPush.mockClear();
 
     // --- Total price is sum of item prices ---
     const sum = cartVal.reduce((s, i) => s + i.price, 0);
@@ -105,7 +106,7 @@ describe('CartFooter', () => {
     const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
     fireEvent.click(desktopPay!);
     expect(alertSpy).toHaveBeenCalledWith(
-      'Te encantaría trabajar conmigo... ¡Me encantaría!',
+      'Te gustaría trabajar conmigo? ... ¡Me encantaría!',
     );
 
     // --- Mobile actions ---
@@ -114,7 +115,9 @@ describe('CartFooter', () => {
 
     expect(mobileButtons[0]).toHaveTextContent('Continue shopping');
     fireEvent.click(mobileButtons[0]);
+    expect(mockPush).toHaveBeenCalledWith('/', { scroll: false });
     expect(mockPush).toHaveBeenCalledTimes(1);
+    mockPush.mockClear();
 
     expect(mobileButtons[1]).toHaveTextContent('Pay');
     fireEvent.click(mobileButtons[1]);

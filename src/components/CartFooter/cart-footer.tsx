@@ -28,7 +28,7 @@ export function CartFooter() {
   }, [getCartCount, cart]);
 
   function alertMessage() {
-    alert('Te encantaría trabajar conmigo... ¡Me encantaría!');
+    alert('Te gustaría trabajar conmigo? ... ¡Me encantaría!');
   }
 
   return (
@@ -56,7 +56,11 @@ export function CartFooter() {
       )}
 
       <StyledMobileActions>
-        <Button variant="secondary" text="Continue shopping" />
+        <Button
+          variant="secondary"
+          text="Continue shopping"
+          onClick={() => router.push('/', { scroll: false })}
+        />
         {cartCount > 0 && (
           <Button variant="primary" text="Pay" onClick={() => alertMessage()} />
         )}

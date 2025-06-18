@@ -20,6 +20,10 @@ body {
   overflow-x: hidden;
 }
 
+a {
+  all: unset;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
