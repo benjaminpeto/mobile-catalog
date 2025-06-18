@@ -29,6 +29,14 @@ linting, formatting, and type-checking before each commit.
    npm install
    ```
 
+3. **Copy `.env.example` and add environmental variables**
+
+4. **Start the server**
+
+   ```bash
+   npm run dev
+   ```
+
 ---
 
 ## Available Scripts
@@ -67,10 +75,11 @@ mobile-catalog/
 ├── src/
 │   ├── app/           # Next.js App Router (layouts, pages)
 │   ├── components/    # Reusable UI components
+│   ├── context/       # Context for global state management
 │   ├── hooks/         # Custom React hooks
-│   ├── utils/         # Helpers
+│   ├── helpers/       # Helper functions
 │   ├── lib/           # Libraries
-│   └── tests/         # Vitest unit tests
+│   └── tests/         # Vitest unit test config -- here I could have include global mocks, but I did not
 ├── public/            # Static assets
 ├── eslint.config.mjs  # ESLint config
 ├── prettier.config.js # Prettier config
