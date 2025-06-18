@@ -43,10 +43,10 @@ export function CartItem() {
           <StyledCartItemInfoWrapper>
             <div>
               <SubHeading>{item.name}</SubHeading>
-              <ParagraphText fontSize="12px">
+              <ParagraphText $fontSize="12px">
                 {item.selectedStorage} | {item.selectedColor}
               </ParagraphText>
-              <ParagraphText fontSize="12px" style={{ paddingTop: '20px' }}>
+              <ParagraphText $fontSize="12px" style={{ paddingTop: '20px' }}>
                 {item.price} EUR
               </ParagraphText>
             </div>

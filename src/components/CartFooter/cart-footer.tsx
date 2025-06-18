@@ -19,7 +19,7 @@ export function CartFooter() {
         variant="secondary"
         text="Continue shopping"
         className="desktop-only"
-        onClick={() => router.push('/')}
+        onClick={() => router.push('/', { scroll: false })} // To opt out of Next.js scroll restoration, thanks to CSS position fixed... /sticky/ too but not in this case
       />
 
       <StyledPaymentInfo>

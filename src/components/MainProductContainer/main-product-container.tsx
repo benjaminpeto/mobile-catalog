@@ -46,7 +46,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
       };
       addToCart(item);
       localStorage.setItem('cart', JSON.stringify([...cart, item]));
-      router.push('/cart');
+      router.push('/cart', { scroll: false });
     }
   };
 
@@ -69,8 +69,8 @@ export function MainProductContainer({ product }: ProductClientProps) {
       <SelectorWrapper>
         <MainHeading>{name}</MainHeading>
         <ParagraphText
-          fontSize="20px"
-          textTransform="none"
+          $fontSize="20px"
+          $textTransform="none"
           style={{ marginBottom: '64px' }}
         >
           From {selectedStorage ? selectedStorage.price : product.basePrice} EUR
@@ -103,7 +103,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
           ))}
         </ColorSwatchWrapper>
         {selectedColor && (
-          <ParagraphText textTransform="capitalize" className="selected-color">
+          <ParagraphText $textTransform="capitalize" className="selected-color">
             {selectedColor.name}
           </ParagraphText>
         )}

@@ -15,7 +15,6 @@ interface MobileCardProps {
   brand: string;
   price: number;
   imageUrl: string;
-  onClick: () => void;
 }
 
 export function MobileCard({
@@ -25,7 +24,6 @@ export function MobileCard({
   brand,
   price,
   imageUrl,
-  onClick,
 }: MobileCardProps) {
   return (
     <Link href={`/${productId}`}>
@@ -38,12 +36,12 @@ export function MobileCard({
           style={{ objectFit: 'contain' }}
         />
         <MobileTextContainer>
-          <ParagraphText fontSize="10px" color="var(--foreground-muted)">
+          <ParagraphText $fontSize="10px" color="var(--foreground-muted)">
             {brand}
           </ParagraphText>
           <MobileHeading>
             <SubHeading>{name}</SubHeading>
-            <ParagraphText fontSize="12px">{price} EUR</ParagraphText>
+            <ParagraphText $fontSize="12px">{price} EUR</ParagraphText>
           </MobileHeading>
         </MobileTextContainer>
       </MobileCardContainer>

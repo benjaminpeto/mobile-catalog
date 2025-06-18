@@ -31,7 +31,7 @@ export function Carousel({ items }: CarouselProps) {
 
   return (
     <CarouselContainer>
-      <SubHeading fontSize="20px">Similar Items</SubHeading>
+      <SubHeading $fontSize="20px">Similar Items</SubHeading>
 
       <CarouselWrapper
         ref={wrapperRef}

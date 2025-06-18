@@ -13,6 +13,6 @@ export const BasketContainer = styled(Link)`
 `;
 
 export const BasketSVG = styled(Image)`
-  width: 12.24px;
-  height: 16px;
+  width: auto;
+  height: auto;
 `;

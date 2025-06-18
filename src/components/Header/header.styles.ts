@@ -9,19 +9,19 @@ export const MainHeading = styled.h1`
 `;
 
 export const SubHeading = styled.h2<{
-  fontSize?: string;
+  $fontSize?: string;
 }>`
-  font-size: ${({ fontSize }) => fontSize || '12px'};
+  font-size: ${({ $fontSize }) => $fontSize || '12px'};
   text-transform: uppercase;
   font-weight: 300;
 `;
 
 export const ParagraphText = styled.p<{
-  fontSize?: string;
-  textTransform?: string;
-  color?: string;
+  $fontSize?: string;
+  $textTransform?: string;
+  $color?: string;
 }>`
-  font-size: ${({ fontSize }) => fontSize || '14px'};
-  text-transform: ${({ textTransform }) => textTransform || 'uppercase'};
-  color: ${({ color }) => color || 'var(--foreground)'};
+  font-size: ${({ $fontSize }) => $fontSize || '14px'};
+  text-transform: ${({ $textTransform }) => $textTransform || 'uppercase'};
+  color: ${({ $color }) => $color || 'var(--foreground)'};
 `;

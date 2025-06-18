@@ -29,9 +29,6 @@ export function ProductClient({ product }: ProductClientProps) {
             brand={similarProduct.brand}
             price={similarProduct.basePrice}
             imageUrl={similarProduct.imageUrl}
-            onClick={() =>
-              console.log(`Clicked on product ${similarProduct.id}`)
-            }
           />
         ))}
       />

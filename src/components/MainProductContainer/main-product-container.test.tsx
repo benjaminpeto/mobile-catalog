@@ -133,6 +133,6 @@ describe('MainProductContainer', () => {
       ]),
     );
 
-    expect(pushMock).toHaveBeenCalledWith('/cart');
+    expect(pushMock).toHaveBeenCalledWith('/cart', { scroll: false });
   });
 });

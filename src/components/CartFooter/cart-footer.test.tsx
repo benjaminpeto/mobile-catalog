@@ -81,7 +81,7 @@ describe('CartFooter', () => {
       .getAllByRole('button', { name: 'Continue shopping' })
       .find(btn => btn.classList.contains('desktop-only'));
     fireEvent.click(desktopContinue!);
-    expect(mockPush).toHaveBeenCalledWith('/');
+    expect(mockPush).toHaveBeenCalledWith('/', { scroll: false });
   });
 
   it('does not navigate when "Pay" is clicked', () => {

@@ -20,13 +20,13 @@ export default async function Home({ searchParams }: HomeProps) {
       <Suspense
         fallback={
           <AlertContainer>
-            <SubHeading fontSize="24px">Loading products...</SubHeading>
+            <SubHeading $fontSize="24px">Loading products...</SubHeading>
           </AlertContainer>
         }
       >
         {products.length < 1 ? (
           <AlertContainer>
-            <SubHeading fontSize="24px">No products found</SubHeading>
+            <SubHeading $fontSize="24px">No products found</SubHeading>
           </AlertContainer>
         ) : (
           <MobileListContainer products={products} />

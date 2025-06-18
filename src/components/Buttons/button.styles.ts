@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 
 export const StyledButton = styled.button<{
-  variant: 'primary' | 'secondary' | 'disabled' | 'link';
+  $variant: 'primary' | 'secondary' | 'disabled' | 'link';
 }>`
   width: 100%;
   display: flex;
@@ -11,31 +11,31 @@ export const StyledButton = styled.button<{
   justify-content: center;
   gap: 8px;
   padding: 16px 28.5px;
-  cursor: ${({ variant }) =>
-    variant === 'disabled' ? 'not-allowed' : 'pointer'};
-  background: ${({ variant }) =>
-    variant === 'primary'
+  cursor: ${({ $variant }) =>
+    $variant === 'disabled' ? 'not-allowed' : 'pointer'};
+  background: ${({ $variant }) =>
+    $variant === 'primary'
       ? 'var(--foreground)'
-      : variant === 'secondary'
+      : $variant === 'secondary'
         ? 'var(--background)'
-        : variant === 'disabled'
+        : $variant === 'disabled'
           ? '#cccccc'
           : 'transparent'};
-  border: ${({ variant }) =>
-    variant === 'secondary' ? '1px solid var(--foreground)' : 'none'};
-  color: ${({ variant }) =>
-    variant === 'primary'
+  border: ${({ $variant }) =>
+    $variant === 'secondary' ? '1px solid var(--foreground)' : 'none'};
+  color: ${({ $variant }) =>
+    $variant === 'primary'
       ? 'var(--background)'
-      : variant === 'secondary'
+      : $variant === 'secondary'
         ? 'var(--foreground)'
-        : variant === 'disabled'
+        : $variant === 'disabled'
           ? 'var(--foreground)'
           : 'var(--foreground)'};
-  text-decoration: ${({ variant }) =>
-    variant === 'link' ? 'underline' : 'none'};
+  text-decoration: ${({ $variant }) =>
+    $variant === 'link' ? 'underline' : 'none'};
 
   &:hover {
-    opacity: ${({ variant }) => (variant === 'disabled' ? 1 : 0.8)};
+    opacity: ${({ $variant }) => ($variant === 'disabled' ? 1 : 0.8)};
   }
 `;
 

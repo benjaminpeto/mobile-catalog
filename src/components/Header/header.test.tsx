@@ -45,7 +45,7 @@ describe('Paragraph', () => {
 
 describe('SubHeading styled component (direct prop overrides)', () => {
   it('applies a custom fontSize when passed', () => {
-    render(<SubHeading fontSize="20px">Custom Size</SubHeading>);
+    render(<SubHeading $fontSize="20px">Custom Size</SubHeading>);
     const h2 = screen.getByText('Custom Size');
     expect(h2.tagName.toLowerCase()).toBe('h2');
     expect(h2).toHaveStyle({
@@ -57,7 +57,7 @@ describe('SubHeading styled component (direct prop overrides)', () => {
 
 describe('ParagraphText styled component (direct prop overrides)', () => {
   it('applies a custom fontSize when passed', () => {
-    render(<ParagraphText fontSize="18px">Big Text</ParagraphText>);
+    render(<ParagraphText $fontSize="18px">Big Text</ParagraphText>);
     const p = screen.getByText('Big Text');
     expect(p.tagName.toLowerCase()).toBe('p');
     expect(p).toHaveStyle({

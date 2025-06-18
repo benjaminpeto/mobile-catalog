@@ -19,7 +19,6 @@ export function MobileListContainer({ products }: MobileListContainerProps) {
           brand={product.brand}
           price={product.basePrice}
           imageUrl={product.imageUrl}
-          onClick={() => console.log(`Clicked on product ${product.id}`)}
         />
       ))}
     </MobileListGrid>

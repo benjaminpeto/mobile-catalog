@@ -67,7 +67,6 @@ describe('MobileListContainer', () => {
           brand: prod.brand,
           price: prod.basePrice,
           imageUrl: prod.imageUrl,
-          onClick: expect.any(Function),
         }),
       );
     });

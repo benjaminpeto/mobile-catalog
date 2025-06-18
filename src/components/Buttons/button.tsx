@@ -18,7 +18,7 @@ export function Button({
   return (
     <StyledButton
       onClick={onClick}
-      variant={variant}
+      $variant={variant}
       disabled={variant === 'disabled'}
       className={className}
     >

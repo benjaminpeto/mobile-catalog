@@ -15,12 +15,12 @@ export function ProductSpecs({ product }: ProductClientProps) {
 
   return (
     <StyledProductSpecWrapper>
-      <SubHeading fontSize="20px">Specifications</SubHeading>
+      <SubHeading $fontSize="20px">Specifications</SubHeading>
       <StyledProductGrid>
         {specs.map((spec, index) => (
           <StyledGridItem key={index}>
-            <ParagraphText fontSize="12px">{spec.title}</ParagraphText>
-            <ParagraphText fontSize="12px" textTransform="none">
+            <ParagraphText $fontSize="12px">{spec.title}</ParagraphText>
+            <ParagraphText $fontSize="12px" $textTransform="none">
               {spec.value}
             </ParagraphText>
           </StyledGridItem>
