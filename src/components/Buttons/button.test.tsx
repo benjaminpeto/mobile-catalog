@@ -20,8 +20,7 @@ describe('Button', () => {
       display: 'flex',
       width: '100%',
       gap: '8px',
-      padding: '20px 40px',
-      marginTop: '41px',
+      padding: '16px 28.5px',
       cursor: 'pointer',
     });
 

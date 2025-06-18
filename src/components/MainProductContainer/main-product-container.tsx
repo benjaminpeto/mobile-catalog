@@ -70,7 +70,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
         <MainHeading>{name}</MainHeading>
         <ParagraphText
           fontSize="20px"
-          texttransform="none"
+          textTransform="none"
           style={{ marginBottom: '64px' }}
         >
           From {selectedStorage ? selectedStorage.price : product.basePrice} EUR
@@ -103,7 +103,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
           ))}
         </ColorSwatchWrapper>
         {selectedColor && (
-          <ParagraphText texttransform="capitalize">
+          <ParagraphText textTransform="capitalize" className="selected-color">
             {selectedColor.name}
           </ParagraphText>
         )}

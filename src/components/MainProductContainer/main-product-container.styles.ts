@@ -11,6 +11,7 @@ export const ProductContainer = styled.main`
   padding: 24px 0px;
   width: 100%;
   max-width: 1200px;
+  margin-top: 104px;
 
   @media (max-width: 1024px) {
     width: 100%;
@@ -20,6 +21,7 @@ export const ProductContainer = styled.main`
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: start;
+    margin-top: 0;
   }
 `;
 
@@ -28,6 +30,10 @@ export const ImageContainer = styled.div`
   width: 510px;
   height: 630px;
   overflow: hidden;
+
+  @media (max-width: 600px) {
+    width: 300px;
+  }
 `;
 
 export const ProductImage = styled(Image)`
@@ -59,6 +65,10 @@ export const ProductImage = styled(Image)`
 export const SelectorWrapper = styled.div`
   display: flex;
   flex-direction: column;
+
+  & .selected-color {
+    margin-bottom: 41px;
+  }
 
   @media (max-width: 768px) {
     width: 100%;

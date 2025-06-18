@@ -10,8 +10,7 @@ export const StyledButton = styled.button<{
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 20px 40px;
-  margin-top: 41px;
+  padding: 16px 28.5px;
   cursor: ${({ variant }) =>
     variant === 'disabled' ? 'not-allowed' : 'pointer'};
   background: ${({ variant }) =>

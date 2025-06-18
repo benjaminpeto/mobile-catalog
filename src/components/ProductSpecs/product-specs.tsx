@@ -20,7 +20,7 @@ export function ProductSpecs({ product }: ProductClientProps) {
         {specs.map((spec, index) => (
           <StyledGridItem key={index}>
             <ParagraphText fontSize="12px">{spec.title}</ParagraphText>
-            <ParagraphText fontSize="12px" texttransform="none">
+            <ParagraphText fontSize="12px" textTransform="none">
               {spec.value}
             </ParagraphText>
           </StyledGridItem>

@@ -3,10 +3,15 @@
 import { styled } from 'styled-components';
 
 export const SearchInputContainer = styled.div`
+  position: fixed;
+  top: 75.5px;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
   display: flex;
   flex-direction: column;
   padding: 12px 100px;
-  margin-top: 80px;
   gap: 12px;
 
   @media (max-width: 768px) {

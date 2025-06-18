@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 export const MobileListGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(5, minmax(200px, 1fr));
+  margin-top: 148px;
   gap: 0.5px; /* Ensures consistent spacing between items for outlines*/
   padding: 48px 100px;
 

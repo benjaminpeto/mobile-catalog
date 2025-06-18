@@ -4,6 +4,12 @@ import Image from 'next/image';
 import { styled } from 'styled-components';
 
 export const NavContainer = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;

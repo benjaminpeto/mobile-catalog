@@ -18,10 +18,10 @@ export const SubHeading = styled.h2<{
 
 export const ParagraphText = styled.p<{
   fontSize?: string;
-  texttransform?: string;
+  textTransform?: string;
   color?: string;
 }>`
   font-size: ${({ fontSize }) => fontSize || '14px'};
-  text-transform: ${({ texttransform }) => texttransform || 'uppercase'};
+  text-transform: ${({ textTransform }) => textTransform || 'uppercase'};
   color: ${({ color }) => color || 'var(--foreground)'};
 `;
