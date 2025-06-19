@@ -28,10 +28,20 @@ describe('Carousel component', () => {
     expect(screen.getByText('Item A')).toBeInTheDocument();
     expect(screen.getByText('Item B')).toBeInTheDocument();
 
-    const track = screen.getByTestId('carousel-track');
+    // find the track by role/list
+    const track = screen.getByRole('list', { name: 'carousel track' });
+    // its first child is the listitem wrapper around the spans
+    const firstListItem = track.querySelector('[role="listitem"]')!;
+    // within that the <span> “Item A” lives
+    expect(firstListItem).toContainElement(screen.getByText('Item A'));
+    // and the track has the expected inline transform style
     expect(track).toHaveStyle({ transform: 'translateX(0px)' });
 
-    const segments = screen.getAllByTestId('progress-segment');
+    // progress segments all have aria-label “Segment X of 4”
+    const progressGroup = screen.getByRole('group', {
+      name: 'carousel progress',
+    });
+    const segments = screen.getAllByLabelText(/Segment \d+ of 4/);
     expect(segments).toHaveLength(4);
   });
 
@@ -45,9 +55,11 @@ describe('Carousel component', () => {
     render(<Carousel items={items} />);
 
     const link = screen.getByText('CLICK') as HTMLAnchorElement;
+    // stub elementFromPoint to return the link
     vi.spyOn(document, 'elementFromPoint').mockImplementation(() => link);
 
-    const wrapper = screen.getByTestId('carousel-wrapper');
+    // pointer events on the wrapper
+    const wrapper = screen.getByRole('region', { name: 'carousel wrapper' });
     fireEvent.pointerDown(wrapper, { clientX: 10, pointerId: 1 });
     fireEvent.pointerUp(wrapper, { clientX: 10, pointerId: 1 });
 

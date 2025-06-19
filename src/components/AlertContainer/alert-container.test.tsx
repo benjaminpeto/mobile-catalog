@@ -10,13 +10,13 @@ describe('AlertContainer', () => {
   it('renders its children and applies the default padding', () => {
     render(
       <AlertContainer>
-        <div data-testid="child">Alert message</div>
+        <span>Alert message</span>
       </AlertContainer>,
     );
 
-    const child = screen.getByTestId('child');
+    const child = screen.getByText('Alert message');
     expect(child).toBeInTheDocument();
-    expect(child).toHaveTextContent('Alert message');
+    expect(child.tagName.toLowerCase()).toBe('span');
 
     const wrapper = child.parentElement!;
     expect(wrapper.tagName.toLowerCase()).toBe('div');

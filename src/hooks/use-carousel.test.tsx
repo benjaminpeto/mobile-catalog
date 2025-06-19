@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -36,22 +36,17 @@ function TestCarousel({ items }: { items: React.ReactNode[] }) {
   return (
     <>
       <div
-        data-testid="wrapper"
         ref={wrapperRef}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUpCapture={onPointerUpCapture}
       >
-        <div
-          data-testid="track"
-          ref={trackRef}
-          style={{ transform: `translateX(${translate}px)` }}
-        >
+        <div ref={trackRef} style={{ transform: `translateX(${translate}px)` }}>
           {items}
         </div>
       </div>
-      <div data-testid="totalSegments">{totalSegments}</div>
-      <div data-testid="activeSegment">{activeSegment}</div>
+      <div>{totalSegments}</div>
+      <div>{activeSegment}</div>
     </>
   );
 }
@@ -62,18 +57,24 @@ describe('useCarousel hook', () => {
   });
 
   it('starts with translate 0, isDragging false, and at least 4 segments, active 0', () => {
-    render(<TestCarousel items={[]} />);
-    // no width defaults, but totalSegments is clamped to >=4
-    expect(screen.getByTestId('totalSegments')).toHaveTextContent('4');
-    expect(screen.getByTestId('activeSegment')).toHaveTextContent('0');
-    // track has transform: translateX(0px)
-    expect(screen.getByTestId('track')).toHaveStyle({
-      transform: 'translateX(0px)',
-    });
+    const { container } = render(<TestCarousel items={[]} />);
+    const [wrapperDiv, totalDiv, activeDiv] = Array.from(
+      container.children,
+    ) as HTMLElement[];
+
+    // wrapper contains a single child: trackDiv
+    const trackDiv = wrapperDiv.firstElementChild as HTMLElement;
+
+    // totalSegments is clamped to >= 4
+    expect(totalDiv).toHaveTextContent('4');
+    // activeSegment starts at 0
+    expect(activeDiv).toHaveTextContent('0');
+    // track starts at translateX(0px)
+    expect(trackDiv).toHaveStyle({ transform: 'translateX(0px)' });
   });
 
   it('clicks a link (no drag) and calls router.push', () => {
-    render(
+    const { container } = render(
       <TestCarousel
         items={[
           <a key="c" href="/clicked">
@@ -82,43 +83,54 @@ describe('useCarousel hook', () => {
         ]}
       />,
     );
-    const wrapper = screen.getByTestId('wrapper');
+    const [wrapperDiv] = Array.from(container.children) as HTMLElement[];
     const link = screen.getByText('CLICK ME') as HTMLAnchorElement;
 
-    // make elementFromPoint return our link
+    // make elementFromPoint return the link
     vi.spyOn(document, 'elementFromPoint').mockImplementation(() => link);
 
-    // pointerDown + pointerUp at same spot -> hasDraggedRef = false
-    fireEvent.pointerDown(wrapper, { clientX: 10, pointerId: 1 });
-    fireEvent.pointerUp(wrapper, { clientX: 10, pointerId: 1 });
+    // pointerDown + pointerUp at same spot -> treated as click
+    fireEvent.pointerDown(wrapperDiv, { clientX: 10, pointerId: 1 });
+    fireEvent.pointerUp(wrapperDiv, { clientX: 10, pointerId: 1 });
 
     expect(pushMock).toHaveBeenCalledWith('/clicked');
   });
 
-  it('resets translate & progress when items change', () => {
-    const { rerender } = render(
+  it('resets translate & progress when items change', async () => {
+    const { container, rerender } = render(
       <TestCarousel items={[<span key="A">A</span>, <span key="B">B</span>]} />,
     );
-    const wrapper = screen.getByTestId('wrapper');
-    const track = screen.getByTestId('track');
+    const [wrapperDiv] = Array.from(container.children) as HTMLElement[];
+    const trackDiv = wrapperDiv.firstElementChild as HTMLElement;
 
-    // fake dimensions again
-    Object.defineProperty(wrapper, 'clientWidth', { value: 100 });
-    Object.defineProperty(track, 'scrollWidth', { value: 300 });
+    // fake dimensions so drag is possible
+    Object.defineProperty(wrapperDiv, 'clientWidth', { value: 100 });
+    Object.defineProperty(trackDiv, 'scrollWidth', { value: 300 });
 
-    // do a little swipe
-    fireEvent.pointerDown(wrapper, { clientX: 100, pointerId: 1 });
-    fireEvent.pointerMove(wrapper, { clientX: 50 });
-    fireEvent.pointerUp(wrapper, { clientX: 50, pointerId: 1 });
+    // do a little swipe (drag)
+    fireEvent.pointerDown(wrapperDiv, { clientX: 100, pointerId: 1 });
+    fireEvent.pointerMove(wrapperDiv, { clientX: 50 });
+    fireEvent.pointerUp(wrapperDiv, { clientX: 50, pointerId: 1 });
 
-    expect(track).not.toHaveStyle({ transform: 'translateX(0px)' });
+    // track should have moved away from zero
+    expect(trackDiv).not.toHaveStyle({ transform: 'translateX(0px)' });
 
     // now swap items -> effect should reset translate and progress
     rerender(
       <TestCarousel items={[<span key="X">X</span>, <span key="Y">Y</span>]} />,
     );
 
-    expect(track).toHaveStyle({ transform: 'translateX(0px)' });
-    expect(screen.getByTestId('activeSegment')).toHaveTextContent('0');
+    // wait for useEffect to apply reset
+    await waitFor(() => {
+      // children have not changed, so re-query by index
+      const [, totalDiv, activeDiv] = Array.from(
+        container.children,
+      ) as HTMLElement[];
+
+      // track reset
+      expect(trackDiv).toHaveStyle({ transform: 'translateX(0px)' });
+      // active segment reset
+      expect(activeDiv).toHaveTextContent('0');
+    });
   });
 });

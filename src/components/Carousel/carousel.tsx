@@ -38,7 +38,8 @@ export function Carousel({ items }: CarouselProps) {
         onPointerDownCapture={onPointerDown}
         onPointerMoveCapture={onPointerMove}
         onPointerUpCapture={onPointerUpCapture}
-        data-testid="carousel-wrapper"
+        role="region"
+        aria-label="carousel wrapper"
       >
         <CarouselTrack
           ref={trackRef}
@@ -47,20 +48,25 @@ export function Carousel({ items }: CarouselProps) {
             transform: `translateX(${translate}px)`,
             transition: isDragging ? 'none' : 'transform 0.3s ease',
           }}
-          data-testid="carousel-track"
+          role="list"
+          aria-label="carousel track"
         >
-          {items}
+          {items.map((child, idx) => (
+            <div role="listitem" key={idx}>
+              {child}
+            </div>
+          ))}
         </CarouselTrack>
       </CarouselWrapper>
 
       <ProgressContainer>
-        <ProgressBar>
+        <ProgressBar role="group" aria-label="carousel progress">
           {Array.from({ length: totalSegments }, (_, i) => (
             <ProgressSegment
               key={i}
               $isActive={i === activeSegment}
               $isVisible={true}
-              data-testid="progress-segment"
+              aria-label={`Segment ${i + 1} of ${totalSegments}`}
             />
           ))}
         </ProgressBar>

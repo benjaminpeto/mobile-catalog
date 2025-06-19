@@ -64,9 +64,7 @@ describe('Button', () => {
     render(<Button text={LABEL} variant="disabled" onClick={onClick} />);
     const btn = screen.getByRole('button', { name: LABEL });
 
-    // disabled attribute
     expect(btn).toBeDisabled();
-
     expect(btn).toHaveStyle({
       background: 'rgb(204, 204, 204)',
       cursor: 'not-allowed',
@@ -74,7 +72,6 @@ describe('Button', () => {
       borderStyle: 'none',
     });
 
-    // clicking does nothing
     fireEvent.click(btn);
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -91,18 +88,15 @@ describe('Button', () => {
   it('renders an icon when provided', () => {
     const ICON_TEXT = '★';
     render(
-      <Button
-        text={LABEL}
-        variant="primary"
-        icon={<span data-testid="icon">{ICON_TEXT}</span>}
-      />,
+      <Button text={LABEL} variant="primary" icon={<span>{ICON_TEXT}</span>} />,
     );
-    // icon wrapper span
-    const iconWrapper = screen.getByTestId('icon');
-    expect(iconWrapper).toBeInTheDocument();
-    expect(iconWrapper).toHaveTextContent(ICON_TEXT);
 
-    // text still present
+    const iconElement = screen.getByText(ICON_TEXT);
+    expect(iconElement).toBeInTheDocument();
+    expect(iconElement.tagName.toLowerCase()).toBe('span');
+
+    const btn = screen.getByRole('button', { name: `${ICON_TEXT} ${LABEL}` });
+    expect(btn).toContainElement(iconElement);
     expect(screen.getByText(LABEL)).toBeInTheDocument();
   });
 
@@ -114,5 +108,11 @@ describe('Button', () => {
       fontWeight: '300',
       textTransform: 'uppercase',
     });
+  });
+
+  it('does not render extra wrapper span when icon prop is not provided', () => {
+    render(<Button text={LABEL} variant="primary" />);
+    const spans = screen.getAllByText(LABEL);
+    expect(spans).toHaveLength(1);
   });
 });

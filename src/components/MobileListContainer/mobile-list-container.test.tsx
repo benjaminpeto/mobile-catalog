@@ -8,16 +8,10 @@ import { MobileCard } from '@/components/MobileCard';
 
 import { MobileListContainer } from './mobile-list-container';
 
-vi.mock('@/components/MobileCard', () => {
-  return {
-    __esModule: true,
-    MobileCard: vi
-      .fn()
-      .mockImplementation(({ name }) => (
-        <div data-testid="mobile-card">{name}</div>
-      )),
-  };
-});
+vi.mock('@/components/MobileCard', () => ({
+  __esModule: true,
+  MobileCard: vi.fn().mockImplementation(({ name }) => <div>{name}</div>),
+}));
 
 describe('MobileListContainer', () => {
   const products = [
@@ -51,14 +45,11 @@ describe('MobileListContainer', () => {
   it('renders a MobileCard for each product with the correct props', () => {
     render(<MobileListContainer products={products} />);
 
-    const cards = screen.getAllByTestId('mobile-card');
-    expect(cards).toHaveLength(products.length);
-
-    const mock = MobileCard as unknown as Mock;
-    expect(mock).toHaveBeenCalledTimes(products.length);
+    const mockFn = MobileCard as unknown as Mock;
+    expect(mockFn).toHaveBeenCalledTimes(products.length);
 
     products.forEach((prod, idx) => {
-      const [calledProps] = mock.mock.calls[idx];
+      const calledProps = mockFn.mock.calls[idx][0];
       expect(calledProps).toEqual(
         expect.objectContaining({
           idx,
@@ -69,11 +60,19 @@ describe('MobileListContainer', () => {
           imageUrl: prod.imageUrl,
         }),
       );
+
+      expect(screen.getByText(prod.name)).toBeInTheDocument();
     });
   });
 
   it('renders no MobileCard when products array is empty', () => {
     render(<MobileListContainer products={[]} />);
-    expect(screen.queryByTestId('mobile-card')).toBeNull();
+
+    const mockFn = MobileCard as unknown as Mock;
+    expect(mockFn).not.toHaveBeenCalled();
+
+    products.forEach(prod => {
+      expect(screen.queryByText(prod.name)).toBeNull();
+    });
   });
 });
