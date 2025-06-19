@@ -42,6 +42,8 @@ export const ProductImage = styled(Image)`
   top: 0;
   left: 0;
   transition: opacity 0.5s ease-in-out;
+  width: 100%;
+  height: 100%;
 
   &.visible {
     opacity: 1;

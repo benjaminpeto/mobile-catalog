@@ -14,7 +14,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 const addToCartMock = vi.fn();
-vi.mock('@/context', () => ({
+vi.mock('@/context/cart-context', () => ({
   useCart: () => ({
     addToCart: addToCartMock,
     cart: [],
@@ -24,7 +24,7 @@ vi.mock('@/context', () => ({
 vi.mock('next/image', () => ({
   __esModule: true,
   // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-  default: (props: any) => <img data-testid="product-image" {...props} />,
+  default: (props: any) => <img {...props} />,
 }));
 
 vi.mock('@/components', async () => {
@@ -33,7 +33,7 @@ vi.mock('@/components', async () => {
   return {
     ...actual,
     Button: ({ text, variant, onClick }: any) => (
-      <button data-testid="add-button" data-variant={variant} onClick={onClick}>
+      <button data-variant={variant} onClick={onClick}>
         {text}
       </button>
     ),
@@ -46,6 +46,7 @@ describe('MainProductContainer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     product = {
+      id: 'prod-1',
       name: 'Phone X',
       basePrice: 500,
       colorOptions: [
@@ -61,9 +62,8 @@ describe('MainProductContainer', () => {
 
   it('renders one image per color and only the first is visible', () => {
     render(<MainProductContainer product={product} />);
-    const images = screen.getAllByTestId('product-image');
+    const images = screen.getAllByAltText(/Phone X - /);
     expect(images).toHaveLength(product.colorOptions.length);
-
     expect(images[0]).toHaveClass('visible');
     expect(images[1]).toHaveClass('hidden');
   });
@@ -76,63 +76,50 @@ describe('MainProductContainer', () => {
     ).toBeInTheDocument();
   });
 
-  it('allows selecting storage, updates price, toggles selected class and button variant', () => {
+  it('storage must be chosen before enabling Add button; selecting storage updates UI', () => {
     render(<MainProductContainer product={product} />);
-    const btn128 = screen.getByText('128GB');
-    expect(btn128).not.toHaveClass('selected');
 
-    fireEvent.click(btn128);
+    const addBtn = screen.getByRole('button', { name: 'Añadir' });
+    expect(addBtn).toHaveAttribute('data-variant', 'disabled');
+
+    const storageBtn = screen.getByText('128GB');
+    expect(storageBtn).not.toHaveClass('selected');
+
+    fireEvent.click(storageBtn);
 
     expect(screen.getByText('From 100 EUR')).toBeInTheDocument();
-    expect(btn128).toHaveClass('selected');
-
-    const addBtn = screen.getByTestId('add-button');
+    expect(storageBtn).toHaveClass('selected');
     expect(addBtn).toHaveAttribute('data-variant', 'primary');
   });
 
   it('allows picking a color, updates visible image & shows color name', () => {
     render(<MainProductContainer product={product} />);
-    const swatches = screen
+    const colorSwatches = screen
       .getAllByRole('button')
       .filter(btn => (btn as HTMLElement).style.backgroundColor);
-    fireEvent.click(swatches[1]);
 
-    const images = screen.getAllByTestId('product-image');
+    fireEvent.click(colorSwatches[1]);
+
+    const images = screen.getAllByAltText(/Phone X - /);
     expect(images[1]).toHaveClass('visible');
     expect(images[0]).toHaveClass('hidden');
     expect(screen.getByText('White')).toBeInTheDocument();
   });
 
-  it('when storage & color selected, clicking Añadir calls addToCart, updates localStorage and navigates', () => {
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+  it('once storage & color selected, clicking Añadir calls addToCart and navigates', () => {
     render(<MainProductContainer product={product} />);
 
     fireEvent.click(screen.getByText('128GB'));
-
-    const addBtn = screen.getByTestId('add-button');
-    fireEvent.click(addBtn);
+    fireEvent.click(screen.getByRole('button', { name: 'Añadir' }));
 
     expect(addToCartMock).toHaveBeenCalledWith({
+      id: 'prod-1',
       name: product.name,
       selectedStorage: '128GB',
       selectedColor: 'Black',
       price: 100,
       imageUrl: 'url-black',
     });
-
-    expect(setItemSpy).toHaveBeenCalledWith(
-      'cart',
-      JSON.stringify([
-        {
-          name: product.name,
-          selectedStorage: '128GB',
-          selectedColor: 'Black',
-          price: 100,
-          imageUrl: 'url-black',
-        },
-      ]),
-    );
-
     expect(pushMock).toHaveBeenCalledWith('/cart', { scroll: false });
   });
 });

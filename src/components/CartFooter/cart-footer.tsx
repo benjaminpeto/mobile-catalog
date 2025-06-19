@@ -1,10 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import { useCart } from '@/context/cart-context';
-import { useCartStorage } from '@/hooks';
 
 import { Button } from '../Buttons';
 import { ParagraphText } from '../Header';
@@ -16,16 +15,13 @@ import {
 
 export function CartFooter() {
   const router = useRouter();
-  const { getCartCount } = useCartStorage();
   const { cart } = useCart();
 
-  const [cartCount, setCartCount] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  useEffect(() => {
-    setCartCount(getCartCount());
-    setTotalPrice(cart.reduce((sum, item) => sum + item.price, 0));
-  }, [getCartCount, cart]);
+  const cartCount = cart.length;
+  const totalPrice = useMemo(
+    () => cart.reduce((sum, item) => sum + item.price, 0),
+    [cart],
+  );
 
   function alertMessage() {
     alert('Te gustaría trabajar conmigo? ... ¡Me encantaría!');
@@ -37,7 +33,7 @@ export function CartFooter() {
         variant="secondary"
         text="Continue shopping"
         className="desktop-only"
-        onClick={() => router.push('/', { scroll: false })} // To opt out of Next.js scroll restoration, thanks to CSS position fixed... /sticky/ too but not in this case
+        onClick={() => router.push('/', { scroll: false })}
       />
 
       {cartCount > 0 && (
@@ -50,7 +46,7 @@ export function CartFooter() {
             variant="primary"
             text="Pay"
             className="desktop-only"
-            onClick={() => alertMessage()}
+            onClick={alertMessage}
           />
         </StyledPaymentInfo>
       )}
@@ -62,7 +58,7 @@ export function CartFooter() {
           onClick={() => router.push('/', { scroll: false })}
         />
         {cartCount > 0 && (
-          <Button variant="primary" text="Pay" onClick={() => alertMessage()} />
+          <Button variant="primary" text="Pay" onClick={alertMessage} />
         )}
       </StyledMobileActions>
     </StyledCartFooterWrapper>

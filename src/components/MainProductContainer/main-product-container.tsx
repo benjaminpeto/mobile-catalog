@@ -1,10 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Button } from '@/components';
-import { useCart } from '@/context';
+import { useCart } from '@/context/cart-context';
 import type { ColorOption, ProductEntity, StorageOption } from '@/types/api';
 
 import { MainHeading, ParagraphText } from '../Header';
@@ -25,30 +25,37 @@ interface ProductClientProps {
 }
 
 export function MainProductContainer({ product }: ProductClientProps) {
-  const { id, name, colorOptions, storageOptions } = product;
-  const { addToCart, cart } = useCart();
+  const { id, name, colorOptions, storageOptions, basePrice } = product;
+  const { addToCart } = useCart();
   const router = useRouter();
+
   const [selectedColor, setSelectedColor] = useState<ColorOption>(
-    product.colorOptions[0],
+    colorOptions[0],
   );
   const [selectedStorage, setSelectedStorage] = useState<StorageOption | null>(
     null,
   );
 
+  // show basePrice until a storage is chosen
+  const price = useMemo(
+    () => (selectedStorage ? selectedStorage.price : basePrice),
+    [selectedStorage, basePrice],
+  );
+  const canAdd = Boolean(selectedColor && selectedStorage);
+
   const handleAddToCart = () => {
-    if (selectedColor && selectedStorage) {
-      const item = {
-        id,
-        name,
-        selectedStorage: selectedStorage.capacity,
-        selectedColor: selectedColor.name,
-        price: selectedStorage.price,
-        imageUrl: selectedColor.imageUrl,
-      };
-      addToCart(item);
-      localStorage.setItem('cart', JSON.stringify([...cart, item]));
-      router.push('/cart', { scroll: false });
-    }
+    if (!canAdd) return;
+
+    addToCart({
+      id,
+      name,
+      selectedStorage: selectedStorage!.capacity,
+      selectedColor: selectedColor.name,
+      price,
+      imageUrl: selectedColor.imageUrl,
+    });
+
+    router.push('/cart', { scroll: false });
   };
 
   return (
@@ -67,6 +74,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
           />
         ))}
       </ImageContainer>
+
       <SelectorWrapper>
         <MainHeading>{name}</MainHeading>
         <ParagraphText
@@ -74,7 +82,7 @@ export function MainProductContainer({ product }: ProductClientProps) {
           $textTransform="none"
           style={{ marginBottom: '64px' }}
         >
-          From {selectedStorage ? selectedStorage.price : product.basePrice} EUR
+          From {price} EUR
         </ParagraphText>
 
         <ParagraphText>Storage. How much space do you need?</ParagraphText>
@@ -99,18 +107,21 @@ export function MainProductContainer({ product }: ProductClientProps) {
               <ColorButton
                 style={{ backgroundColor: color.hexCode }}
                 onClick={() => setSelectedColor(color)}
+                className={
+                  selectedColor.hexCode === color.hexCode ? 'selected' : ''
+                }
               />
             </ButtonWrapper>
           ))}
         </ColorSwatchWrapper>
-        {selectedColor && (
-          <ParagraphText $textTransform="capitalize" className="selected-color">
-            {selectedColor.name}
-          </ParagraphText>
-        )}
+
+        <ParagraphText $textTransform="capitalize" className="selected-color">
+          {selectedColor.name}
+        </ParagraphText>
+
         <Button
           text="Añadir"
-          variant={!selectedColor || !selectedStorage ? 'disabled' : 'primary'}
+          variant={canAdd ? 'primary' : 'disabled'}
           onClick={handleAddToCart}
         />
       </SelectorWrapper>

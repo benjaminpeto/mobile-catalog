@@ -1,9 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import { CartItem as CartItemInferface, useCart } from '@/context/cart-context';
-import { useCartStorage } from '@/hooks';
+import { useCart } from '@/context/cart-context';
 
 import { RemoveButton } from '../Buttons/remove-button';
 import { ParagraphText, SubHeading } from '../Header';
@@ -15,34 +12,11 @@ import {
 } from './cart-item.styles';
 
 export function CartItem() {
-  const { cart, setCart } = useCart();
-  const { removeItemFromStorage } = useCartStorage();
-  const [hydratedCart, setHydratedCart] = useState<CartItemInferface[]>([]);
-
-  useEffect(() => {
-    // ensure the cart is hydrated after the client-side rendering
-    setHydratedCart(cart);
-  }, [cart]);
-
-  // as IDs are not unique, we need to handle the removal of items based on their ID, selectedStorage, and selectedColor
-  const handleRemoveItem = (
-    id: string,
-    selectedStorage: string,
-    selectedColor: string,
-  ) => {
-    const updatedCart = cart.filter(
-      item =>
-        item.id !== id ||
-        item.selectedStorage !== selectedStorage ||
-        item.selectedColor !== selectedColor,
-    );
-    setCart(updatedCart);
-    removeItemFromStorage(id, selectedStorage, selectedColor);
-  };
+  const { cart, removeFromCart } = useCart();
 
   return (
-    <StyledCartItem>
-      {hydratedCart.map(item => (
+    <StyledCartItem suppressHydrationWarning>
+      {cart.map(item => (
         <StyledCartItemWrapper
           key={`${item.id}-${item.selectedStorage}-${item.selectedColor}`}
         >
@@ -51,7 +25,7 @@ export function CartItem() {
             width={262}
             height={324}
             alt={item.name}
-            priority={true} // disables lazy loading as the image is above the fold and LCP, will improve performance
+            priority={true}
           />
           <StyledCartItemInfoWrapper>
             <div>
@@ -66,7 +40,7 @@ export function CartItem() {
 
             <RemoveButton
               onClick={() =>
-                handleRemoveItem(
+                removeFromCart(
                   item.id,
                   item.selectedStorage,
                   item.selectedColor,

@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 
 export const MobileCardContainer = styled.article`
   position: relative;
+  cursor: pointer;
   overflow: hidden;
   display: flex;
   flex-direction: column;

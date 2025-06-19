@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export interface CartItem {
   id: string;
@@ -14,7 +14,12 @@ export interface CartItem {
 interface CartContextProps {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  removeFromCart: (
+    id: string,
+    selectedStorage: string,
+    selectedColor: string,
+  ) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -22,26 +27,47 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    // using if (typeof window !== 'undefined') or similar client-side checks can cause mismatches
-    // hydrate after client-side rendering in the CartItem component to avoid uncaught error
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedCart = localStorage.getItem('cart');
-      return savedCart ? JSON.parse(savedCart) : [];
+      const saved = localStorage.getItem('cart');
+      if (saved) setCart(JSON.parse(saved));
     }
-    return [];
-  });
+  }, []);
+
+  // persist every time `cart` changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+  }, [cart]);
 
   const addToCart = (item: CartItem) => {
-    setCart(prevCart => {
-      const updatedCart = [...prevCart, item];
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      return updatedCart;
-    });
+    setCart(prev => [...prev, item]);
   };
 
+  const removeFromCart = (
+    id: string,
+    selectedStorage: string,
+    selectedColor: string,
+  ) => {
+    setCart(prev =>
+      prev.filter(
+        item =>
+          item.id !== id ||
+          item.selectedStorage !== selectedStorage ||
+          item.selectedColor !== selectedColor,
+      ),
+    );
+  };
+
+  const clearCart = () => setCart([]);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, setCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

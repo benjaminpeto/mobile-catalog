@@ -25,19 +25,12 @@ const mockCart = [
   },
 ];
 
-const setCart = vi.fn();
-const removeItemFromStorage = vi.fn();
+const removeFromCart = vi.fn();
 
 vi.mock('@/context/cart-context', () => ({
   useCart: () => ({
     cart: mockCart,
-    setCart,
-  }),
-}));
-
-vi.mock('@/hooks', () => ({
-  useCartStorage: () => ({
-    removeItemFromStorage,
+    removeFromCart,
   }),
 }));
 
@@ -69,7 +62,7 @@ describe('CartItem', () => {
     });
   });
 
-  it('calls setCart and removeItemFromStorage when RemoveButton is clicked', () => {
+  it('calls removeFromCart with correct args when RemoveButton is clicked', () => {
     render(<CartItem />);
 
     const removeButtons = screen.getAllByRole('button');
@@ -77,8 +70,7 @@ describe('CartItem', () => {
 
     fireEvent.click(removeButtons[0]);
 
-    expect(setCart).toHaveBeenCalledWith([mockCart[1]]);
-    expect(removeItemFromStorage).toHaveBeenCalledWith(
+    expect(removeFromCart).toHaveBeenCalledWith(
       mockCart[0].id,
       mockCart[0].selectedStorage,
       mockCart[0].selectedColor,
