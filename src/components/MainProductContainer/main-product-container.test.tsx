@@ -62,7 +62,8 @@ describe('MainProductContainer', () => {
 
   it('renders one image per color and only the first is visible', () => {
     render(<MainProductContainer product={product} />);
-    const images = screen.getAllByAltText(/Phone X - /);
+    const images = screen.getAllByRole('img', { name: /Phone X/ });
+
     expect(images).toHaveLength(product.colorOptions.length);
     expect(images[0]).toHaveClass('visible');
     expect(images[1]).toHaveClass('hidden');
@@ -70,7 +71,9 @@ describe('MainProductContainer', () => {
 
   it('shows product name and base price initially', () => {
     render(<MainProductContainer product={product} />);
-    expect(screen.getByText(product.name)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: product.name }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(`From ${product.basePrice} EUR`),
     ).toBeInTheDocument();
@@ -82,7 +85,7 @@ describe('MainProductContainer', () => {
     const addBtn = screen.getByRole('button', { name: 'Añadir' });
     expect(addBtn).toHaveAttribute('data-variant', 'disabled');
 
-    const storageBtn = screen.getByText('128GB');
+    const storageBtn = screen.getByRole('button', { name: '128GB' });
     expect(storageBtn).not.toHaveClass('selected');
 
     fireEvent.click(storageBtn);
@@ -96,11 +99,11 @@ describe('MainProductContainer', () => {
     render(<MainProductContainer product={product} />);
     const colorSwatches = screen
       .getAllByRole('button')
-      .filter(btn => (btn as HTMLElement).style.backgroundColor);
+      .filter(btn => !!(btn as HTMLElement).style.backgroundColor);
 
     fireEvent.click(colorSwatches[1]);
 
-    const images = screen.getAllByAltText(/Phone X - /);
+    const images = screen.getAllByRole('img', { name: /Phone X/ });
     expect(images[1]).toHaveClass('visible');
     expect(images[0]).toHaveClass('hidden');
     expect(screen.getByText('White')).toBeInTheDocument();
@@ -109,8 +112,10 @@ describe('MainProductContainer', () => {
   it('once storage & color selected, clicking Añadir calls addToCart and navigates', () => {
     render(<MainProductContainer product={product} />);
 
-    fireEvent.click(screen.getByText('128GB'));
-    fireEvent.click(screen.getByRole('button', { name: 'Añadir' }));
+    fireEvent.click(screen.getByRole('button', { name: '128GB' }));
+    const addBtn = screen.getByRole('button', { name: 'Añadir' });
+
+    fireEvent.click(addBtn);
 
     expect(addToCartMock).toHaveBeenCalledWith({
       id: 'prod-1',
